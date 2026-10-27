@@ -1,0 +1,18 @@
+{
+  "name": "RV Workspace",
+  "short_name": "RV",
+  "description": "An offline-first workspace for managing clients, projects, tasks, contacts, and payments.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#172554",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

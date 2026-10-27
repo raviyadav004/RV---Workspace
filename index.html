@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#172554">
+    <meta name="description" content="A polished, local-first client, project, task, contact and payment management workspace built with HTML, CSS and vanilla JavaScript." >
+    <link rel="manifest" href="manifest.webmanifest">
+    <title>RV Workspace | Offline Management</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="loading-state" class="loading-state" role="status" aria-live="polite" >
+        <div class="loading-card">
+            <div class="loading-brand">
+                <span class="brand-mark" aria-hidden="true">R</span>
+                <span>RV Workspace</span>
+            </div>
+
+            <p class="loading-copy"> <span class="loading-spinner" aria-hidden="true" style="display: inline-block; vertical-align: middle; margin-right: 8px;" ></span> Opening your workspace securely on this device… </p>
+            <div class="skeleton-grid" aria-hidden="true">
+                <div class="skeleton-block"></div>
+                <div class="skeleton-block"></div>
+                <div class="skeleton-block"></div>
+            </div>
+
+            <div class="skeleton-line" aria-hidden="true"></div>
+            <div class="skeleton-line short" aria-hidden="true"></div>
+        </div>
+    </div>
+
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <span class="brand-mark">R</span>
+                <span> RV <small>WORKSPACE</small> </span>
+            </div>
+
+            <nav aria-label="Main navigation">
+                <button class="nav-link active" data-view="dashboard"> <span>▦</span> Dashboard </button>
+                <button class="nav-link" data-view="clients"> <span>♙</span> Clients </button>
+                <button class="nav-link" data-view="projects"> <span>▤</span> Projects </button>
+                <button class="nav-link" data-view="tasks"> <span>✓</span> Tasks </button>
+                <button class="nav-link" data-view="contacts"> <span>♧</span> Contacts </button>
+                <button class="nav-link" data-view="payments"> <span>₹</span> Payments </button>
+                <button class="nav-link" data-view="trash"> <span>♲</span> Recycle bin <span id="trash-count" class="nav-count">0</span> </button>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="offline-indicator">
+                    <span></span>
+                    <div>
+                        <b>Offline-ready</b>
+                        <small>Your data stays on this device</small>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <button id="menu-toggle" class="icon-button mobile-only" aria-label="Open menu" > ☰ </button>
+                <div>
+                    <p class="eyebrow" id="page-eyebrow"> WORKSPACE OVERVIEW </p>
+                    <h1 id="page-title">Dashboard</h1>
+                </div>
+
+                <div class="top-actions">
+                    <span class="saved-status" id="saved-status"> ● All changes saved </span>
+                    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false" title="Switch theme" >
+                        <span class="theme-icon theme-icon-sun" aria-hidden="true" >
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <circle cx="12" cy="12" r="3.8"></circle>
+                                <path d="M12 2v2.1M12 19.9V22M4.93 4.93l1.48 1.48m11.18 11.18 1.48 1.48M2 12h2.1m15.8 0H22M4.93 19.07l1.48-1.48M17.59 6.41l1.48-1.48"></path>
+                            </svg>
+                        </span>
+
+                        <span class="theme-icon theme-icon-moon" aria-hidden="true" >
+                            <svg viewBox="0 0 24 24" focusable="false"> <path d="M20.2 15.1A8.5 8.5 0 0 1 8.9 3.8 8.7 8.7 0 1 0 20.2 15.1Z"></path> </svg>
+                        </span>
+                    </button>
+
+                    <button class="primary-button" id="quick-add"> ＋ Add record </button>
+                </div>
+            </header>
+
+            <section id="dashboard-view" class="view">
+                <div class="welcome-card">
+                    <div>
+                        <p class="eyebrow light">YOUR WORKSPACE</p>
+                        <h2>Make room for<br>great work.</h2>
+                        <p> Keep clients, projects and tasks organised in one place. </p>
+                    </div>
+
+                    <div class="welcome-art" aria-hidden="true">
+                        <div class="art-circle"></div>
+                        <div class="art-card card-one">✓ &nbsp; Plan</div>
+                        <div class="art-card card-two">↗ &nbsp; Progress</div>
+                        <div class="art-card card-three">✦ &nbsp; Deliver</div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span>Total clients</span>
+                            <span class="stat-icon violet">♙</span>
+                        </div>
+                        <strong id="stat-clients">0</strong>
+                        <small>Active client records</small>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span>Projects</span>
+                            <span class="stat-icon blue">▤</span>
+                        </div>
+                        <strong id="stat-projects">0</strong>
+                        <small>Projects in your workspace</small>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span>Open tasks</span>
+                            <span class="stat-icon orange">✓</span>
+                        </div>
+                        <strong id="stat-tasks">0</strong>
+                        <small>Tasks still to complete</small>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span>Payments tracked</span>
+                            <span class="stat-icon green">₹</span>
+                        </div>
+                        <strong id="stat-payments">₹0</strong>
+                        <small>Payments marked as paid</small>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span>Contacts</span>
+                            <span class="stat-icon blue">♧</span>
+                        </div>
+                        <strong id="stat-contacts">0</strong>
+                        <small>People in your network</small>
+                    </article>
+                </div>
+
+                <div class="dashboard-grid">
+                    <section class="panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h3>Recent activity</h3>
+                                <p>Your latest workspace updates</p>
+                            </div>
+                            <span class="subtle-pill">LIVE</span>
+                        </div>
+
+                        <div id="activity-list" class="activity-list">
+                            <div class="empty-state">
+                                <span>◷</span>
+                                <b>No activity yet</b>
+                                <p> Add a client, project or task to get started. </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h3>Quick start</h3>
+                                <p>Build your workspace in a few steps</p>
+                            </div>
+                        </div>
+
+                        <div class="quick-list">
+                            <button data-create="clients">
+                                <span class="quick-icon violet">♙</span>
+                                <span>
+                                    <b>Add a client</b>
+                                    <small>Keep contact details together</small>
+                                </span>
+                                <span class="chevron">›</span>
+                            </button>
+
+                            <button data-create="projects">
+                                <span class="quick-icon blue">▤</span>
+                                <span>
+                                    <b>Create a project</b>
+                                    <small>Connect work to a client</small>
+                                </span>
+                                <span class="chevron">›</span>
+                            </button>
+
+                            <button data-create="tasks">
+                                <span class="quick-icon orange">✓</span>
+                                <span>
+                                    <b>Add a task</b>
+                                    <small>Track the next action</small>
+                                </span>
+                                <span class="chevron">›</span>
+                            </button>
+
+                            <button data-create="contacts">
+                                <span class="quick-icon blue">♧</span>
+                                <span>
+                                    <b>Add a contact</b>
+                                    <small>Connect people to clients</small>
+                                </span>
+                                <span class="chevron">›</span>
+                            </button>
+
+                            <button data-create="payments">
+                                <span class="quick-icon green">₹</span>
+                                <span>
+                                    <b>Record a payment</b>
+                                    <small>Track invoice status</small>
+                                </span>
+                                <span class="chevron">›</span>
+                            </button>
+                        </div>
+                    </section>
+                </div>
+
+                <section class="panel storage-panel">
+                    <div>
+                        <h3>Data &amp; backup</h3>
+                        <p> Records are stored locally in this browser using IndexedDB. Export a backup before changing devices or clearing browser data. </p>
+                    </div>
+
+                    <div class="backup-actions">
+                        <button class="secondary-button" id="export-json"> Export JSON backup </button>
+                        <label class="secondary-button file-label"> Restore JSON <input type="file" id="import-json" accept=".json,application/json" > </label>
+                    </div>
+                </section>
+            </section>
+
+            <section id="records-view" class="view hidden">
+                <div class="toolbar">
+                    <div class="search-wrap">
+                        <span>⌕</span>
+                        <input id="search-input" type="search" placeholder="Search records..." aria-label="Search records" >
+                    </div>
+
+                    <select id="filter-status" aria-label="Filter by status">
+                        <option value="">All statuses</option>
+                        <option>Active</option>
+                        <option>In progress</option>
+                        <option>On hold</option>
+                        <option>Completed</option>
+                        <option>Paid</option>
+                        <option>Partially paid</option>
+                        <option>Overdue</option>
+                        <option>Pending</option>
+                    </select>
+
+                    <select id="filter-priority" aria-label="Filter by priority">
+                        <option value="">All priorities</option>
+                        <option>High</option>
+                        <option>Medium</option>
+                        <option>Low</option>
+                    </select>
+
+                    <select id="filter-related" aria-label="Filter by related record">
+                        <option value="">All related records</option>
+                    </select>
+
+                    <select id="sort-by" aria-label="Sort records">
+                        <option value="updated-desc">Recently updated</option>
+                        <option value="name-asc">Name A–Z</option>
+                        <option value="created-desc">Newest first</option>
+                        <option value="created-asc">Oldest first</option>
+                    </select>
+
+                    <label class="secondary-button file-label import-csv-label"> Import CSV <input type="file" id="import-csv" accept=".csv,text/csv" aria-label="Import CSV records" > </label>
+                    <button class="secondary-button" id="export-csv-button" type="button" > Export CSV </button>
+                    <button class="primary-button" id="add-record"> ＋ Add new </button>
+                </div>
+
+                <div id="bulk-bar" class="bulk-bar hidden">
+                    <span id="selected-count">0 selected</span>
+                    <button id="bulk-archive" class="secondary-button"> Archive selected </button>
+                    <button id="bulk-delete" class="danger-button"> Move to trash </button>
+                    <button id="clear-selection" class="text-button"> Clear selection </button>
+                </div>
+
+                <div class="panel table-panel">
+                    <div class="table-heading">
+                        <div>
+                            <h3 id="table-title">Clients</h3>
+                            <p id="table-description"> Manage your client relationships </p>
+                        </div>
+
+                        <label class="rows-select"> Rows <select id="page-size">
+                                <option>5</option>
+                                <option selected>10</option>
+                                <option>20</option>
+                                <option>50</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="table-scroll">
+                        <table>
+                            <thead id="table-head"></thead>
+                            <tbody id="table-body"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-footer">
+                        <span id="result-count">0 records</span>
+                        <div class="pagination">
+                            <button id="prev-page" class="page-button" aria-label="Previous page" > ‹ </button>
+                            <span id="page-info">Page 1 of 1</span>
+                            <button id="next-page" class="page-button" aria-label="Next page" > › </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="app-footer">
+                <span>RV Workspace</span>
+                <span>Local-first · No account required</span>
+            </footer>
+        </main>
+    </div>
+
+    <button id="sidebar-backdrop" class="sidebar-backdrop" type="button" aria-label="Close navigation menu" tabindex="-1" ></button>
+
+    <dialog id="record-dialog" class="modal">
+        <form id="record-form" novalidate>
+            <div class="modal-heading">
+                <div>
+                    <p class="eyebrow">WORKSPACE RECORD</p>
+                    <h2 id="form-title">Add client</h2>
+                </div>
+                <button type="button" class="icon-button" id="close-dialog" aria-label="Close dialog" > ✕ </button>
+            </div>
+
+            <div id="form-fields" class="form-fields"></div>
+            <section id="record-history" class="record-history hidden" aria-label="Record activity history" ></section>
+            <p class="form-note"> Required fields are marked with an asterisk (*). </p>
+
+            <div class="modal-actions">
+                <button type="button" id="cancel-dialog" class="secondary-button" > Cancel </button>
+                <button type="submit" class="primary-button"> Save record </button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="confirm-dialog" class="modal confirm-modal">
+        <div class="confirm-icon">!</div>
+        <h2 id="confirm-title">Are you sure?</h2>
+        <p id="confirm-message">This action cannot be undone.</p>
+
+        <div class="modal-actions">
+            <button id="confirm-cancel" class="secondary-button"> Cancel </button>
+            <button id="confirm-ok" class="danger-button"> Continue </button>
+        </div>
+    </dialog>
+
+    <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true" ></div>
+
+    <script src="js/database.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
